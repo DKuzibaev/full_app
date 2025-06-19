@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cards = document.querySelectorAll('.card');
   const modal = document.querySelector('.modal');
   const modalBackdrop = document.querySelector('.modal-backdrop');
+  const progressValue = document.querySelector('.progress-value');
 
   cards.forEach((card) => {
     card.addEventListener('click', () => {
