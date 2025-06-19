@@ -1,6 +1,4 @@
 const cards = document.querySelectorAll('.card');
-// TODO: Проверяйте, найдены ли элементы .card, так как querySelectorAll вернет пустой NodeList, если их нет.
-
 const modal = document.querySelector('.modal');
 const button = document.querySelector('.btn');
 const cartRow = document.querySelector('.row');
@@ -8,41 +6,55 @@ const title = document.getElementById('title');
 const description = document.getElementById('description');
 const modalBackdrop = document.querySelector('.modal-backdrop');
 
+function setupCardEventListeners(card, titleText, descText) {
+  card.addEventListener('click', () => {
+    modal.innerHTML = `
+      <h2>${titleText}</h2>
+      <hr />
+      <p>${descText}</p>
+      <hr />
+      <div>
+        <input type="checkbox" id="done" />
+        <label for="done">Learn</label>
+      </div>
+    `;
+    modal.classList.add('open');
+  });
+}
+
+// Вешаем обработчики на существующие карточки
+cards.forEach((card) => {
+  setupCardEventListeners(
+    card,
+    card.querySelector('h3').textContent,
+    'Описание отсутствует'
+  );
+});
+
+// Добавление новой карточки
 button.addEventListener('click', (e) => {
   e.preventDefault();
 
-  const cartTitle = title.value.lenght !== 0 ? title.value : 'none';
-  const cartDescription = description.value ?? 'ERROR';
-  // TODO: Валидируйте значения title.value и description.value (например, не пустые).
+  const cartTitle = title.value.trim();
+  const cartDescription = description.value.trim();
+
+  if (!cartTitle || !cartDescription) {
+    alert('Пожалуйста, заполните все поля!');
+    return;
+  }
+
   const card = document.createElement('div');
   card.className = 'card';
-  card.innerHTML = `
-    <h3>${cartTitle}</h3>
-  `;
-  // TODO: Новые карточки создаются, но на них не навешиваются обработчики событий для открытия модального окна.
+  card.innerHTML = `<h3>${cartTitle}</h3>`;
   cartRow.appendChild(card);
-  // TODO: Проверьте, успешно ли добавляется карточка в cartRow.
-  const modalWindow = document.createElement('div');
-  modalWindow.className = 'modal';
-  modalWindow.innerHTML = `<h2>${cartTitle}</h2>
-    <hr />
-    <p>
-      ${cartDescription}
-    </p>
-    <hr />
-    <div>
-      <input type="checkbox" id="done" />
-      <label for="done">Learn</label>
-    </div>`;
+
+  setupCardEventListeners(card, cartTitle, cartDescription);
+
+  title.value = '';
+  description.value = '';
 });
 
-cards.forEach((card) => {
-  card.addEventListener('click', () => {
-    modal.classList.toggle('open');
-    // TODO: Проверьте, правильно ли применяется класс .open и связанный с ним CSS-стиль.
-  });
-});
-
+// Закрытие модального окна
 modalBackdrop.addEventListener('click', () => {
   modal.classList.remove('open');
 });
