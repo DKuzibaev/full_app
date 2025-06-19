@@ -6,8 +6,11 @@ const title = document.getElementById('title');
 const description = document.getElementById('description');
 const modalBackdrop = document.querySelector('.modal-backdrop');
 
-function setupCardEventListeners(card, titleText, descText) {
+function setupCardEventListeners(card) {
   card.addEventListener('click', () => {
+    const titleText = card.querySelector('h3').textContent;
+    const descText = card.dataset.description || 'Описание отсутствует';
+
     modal.innerHTML = `
       <h2>${titleText}</h2>
       <hr />
@@ -22,36 +25,37 @@ function setupCardEventListeners(card, titleText, descText) {
   });
 }
 
-// Вешаем обработчики на существующие карточки
-cards.forEach((card) => {
-  setupCardEventListeners(
-    card,
-    card.querySelector('h3').textContent,
-    'Описание отсутствует'
-  );
-});
-
-// Добавление новой карточки
+// Обработчик для новых карточек
 button.addEventListener('click', (e) => {
   e.preventDefault();
 
   const cartTitle = title.value.trim();
   const cartDescription = description.value.trim();
 
-  if (!cartTitle || !cartDescription) {
-    alert("Oops! You can't add something that doesn't exist.");
+  if (!cartTitle) {
+    alert('Введите заголовок!');
     return;
   }
 
   const card = document.createElement('div');
   card.className = 'card';
+  card.dataset.description = cartDescription; // Сохраняем описание
   card.innerHTML = `<h3>${cartTitle}</h3>`;
+
   cartRow.appendChild(card);
+  setupCardEventListeners(card);
 
-  setupCardEventListeners(card, cartTitle, cartDescription);
-
+  // Очищаем форму
   title.value = '';
   description.value = '';
+});
+
+// Инициализация существующих карточек
+cards.forEach((card) => {
+  if (!card.dataset.description) {
+    card.dataset.description = 'Описание отсутствует';
+  }
+  setupCardEventListeners(card);
 });
 
 // Закрытие модального окна
