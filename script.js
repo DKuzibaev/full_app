@@ -39,7 +39,7 @@ button.addEventListener('click', (e) => {
   const cartDescription = description.value.trim();
 
   if (!cartTitle || !cartDescription) {
-    alert('Пожалуйста, заполните все поля!');
+    alert("Oops! You can't add something that doesn't exist.");
     return;
   }
 
