@@ -5,6 +5,7 @@ const cartRow = document.querySelector('.row');
 const title = document.getElementById('title');
 const description = document.getElementById('description');
 const modalBackdrop = document.querySelector('.modal-backdrop');
+const progressValue = document.querySelector('progress-value');
 
 function setupCardEventListeners(card) {
   card.addEventListener('click', () => {
@@ -25,10 +26,16 @@ function setupCardEventListeners(card) {
   });
 }
 
-// Обработчик для новых карточек
-button.addEventListener('click', (e) => {
-  e.preventDefault();
+function closeModal() {
+  modal.classList.remove('open');
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      modal.classList.remove('open');
+    }
+  });
+}
 
+function addCardToList() {
   const cartTitle = title.value.trim();
   const cartDescription = description.value.trim();
 
@@ -48,6 +55,12 @@ button.addEventListener('click', (e) => {
   // Очищаем форму
   title.value = '';
   description.value = '';
+}
+
+// Обработчик для новых карточек
+button.addEventListener('click', (e) => {
+  e.preventDefault();
+  addCardToList();
 });
 
 // Инициализация существующих карточек
@@ -59,12 +72,4 @@ cards.forEach((card) => {
 });
 
 // Закрытие модального окна
-modalBackdrop.addEventListener('click', () => {
-  modal.classList.remove('open');
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && modal.classList.contains('open')) {
-    modal.classList.remove('open');
-  }
-});
+modalBackdrop.addEventListener('click', closeModal);
